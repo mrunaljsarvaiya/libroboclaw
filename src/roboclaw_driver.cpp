@@ -79,6 +79,7 @@ namespace libroboclaw {
         packet[0] = address;
         packet[1] = command;
 
+        // Why is this here?
         crc16_reset();
         crc16(&packet[0], 2);
 
@@ -237,6 +238,57 @@ namespace libroboclaw {
         tx_buffer[3] = (unsigned char) (duty.second & 0xFF);
 
         txrx(address, 34, tx_buffer, sizeof(tx_buffer), rx_buffer, sizeof(rx_buffer), true, false);
+    }
+
+    void driver::set_position(  unsigned char address, std::pair<uint32_t, int32_t> position, 
+                                std::pair<uint32_t, int32_t> speed, std::pair<uint32_t, int32_t> accel, 
+                                std::pair<uint32_t, int32_t> decel){
+        unsigned char rx_buffer[1];
+        unsigned char tx_buffer[32];
+
+        // Motor 1
+        tx_buffer[0] = (unsigned char) ((accel.first >> 24) & 0xFF);
+        tx_buffer[1] = (unsigned char) ((accel.first >> 16) & 0xFF);
+        tx_buffer[2] = (unsigned char) ((accel.first >> 8) & 0xFF);
+        tx_buffer[3] = (unsigned char) (accel.first & 0xFF);
+        
+        tx_buffer[4] = (unsigned char) ((speed.first >> 24) & 0xFF);
+        tx_buffer[5] = (unsigned char) ((speed.first >> 16) & 0xFF);
+        tx_buffer[6] = (unsigned char) ((speed.first >> 8) & 0xFF);
+        tx_buffer[7] = (unsigned char) (speed.first & 0xFF);
+
+        tx_buffer[8] = (unsigned char) ((decel.first >> 24) & 0xFF);
+        tx_buffer[9] = (unsigned char) ((decel.first >> 16) & 0xFF);
+        tx_buffer[10] = (unsigned char) ((decel.first >> 8) & 0xFF);
+        tx_buffer[11] = (unsigned char) (decel.first & 0xFF);
+
+        tx_buffer[12] = (unsigned char) ((position.first >> 24) & 0xFF);
+        tx_buffer[13] = (unsigned char) ((position.first >> 16) & 0xFF);
+        tx_buffer[14] = (unsigned char) ((position.first >> 8) & 0xFF);
+        tx_buffer[15] = (unsigned char) (position.first & 0xFF);
+
+        // Motor 2
+        tx_buffer[16] = (unsigned char) ((accel.second >> 24) & 0xFF);
+        tx_buffer[17] = (unsigned char) ((accel.second >> 16) & 0xFF);
+        tx_buffer[18] = (unsigned char) ((accel.second >> 8) & 0xFF);
+        tx_buffer[19] = (unsigned char) (accel.second & 0xFF);
+        
+        tx_buffer[20] = (unsigned char) ((speed.second >> 24) & 0xFF);
+        tx_buffer[21] = (unsigned char) ((speed.second >> 16) & 0xFF);
+        tx_buffer[22] = (unsigned char) ((speed.second >> 8) & 0xFF);
+        tx_buffer[23] = (unsigned char) (speed.second & 0xFF);
+
+        tx_buffer[24] = (unsigned char) ((decel.second >> 24) & 0xFF);
+        tx_buffer[25] = (unsigned char) ((decel.second >> 16) & 0xFF);
+        tx_buffer[26] = (unsigned char) ((decel.second >> 8) & 0xFF);
+        tx_buffer[27] = (unsigned char) (decel.second & 0xFF);
+
+        tx_buffer[28] = (unsigned char) ((position.second >> 24) & 0xFF);
+        tx_buffer[29] = (unsigned char) ((position.second >> 16) & 0xFF);
+        tx_buffer[30] = (unsigned char) ((position.second >> 8) & 0xFF);
+        tx_buffer[31] = (unsigned char) (position.second & 0xFF);
+
+        txrx(address, 67, tx_buffer, sizeof(tx_buffer), rx_buffer, sizeof(rx_buffer), true, false);
     }
 
 }

@@ -43,10 +43,14 @@ namespace libroboclaw {
         std::pair<int, int> get_encoders(unsigned char address);
 
         std::pair<int, int> get_velocity(unsigned char address);
-
+        
         void set_velocity(unsigned char address, std::pair<int, int> speed);
 
         void set_duty(unsigned char address, std::pair<int, int> duty);
+
+        void set_position(  unsigned char address, std::pair<uint32_t, int32_t> position, 
+                            std::pair<uint32_t, int32_t> speed, std::pair<uint32_t, int32_t> accel, 
+                            std::pair<uint32_t, int32_t> decel);
 
         void reset_encoders(unsigned char address);
 
